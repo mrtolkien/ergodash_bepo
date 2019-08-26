@@ -1,4 +1,4 @@
-# ergodash_bepo
+# ergodash_bépo
 My personal Ergodash layout made to be used in conjuction with OS-level bépo (which is the reason behind the placement of most of the symbols on the keyboard)
 
 Features:
