@@ -12,6 +12,7 @@ Features:
 TODO:
 - Double tap layer for alt+layer, buggy when I tried to implement it for some reason.
 - More ways to access key chords based on thumb keys, especially cmd+ctrl and alt+enter
+- Add a way to access keybindings for tmux, especially ctrl+b -> left/right
 
 More info about the keyboard:
 https://github.com/omkbd/ErgoDash/
