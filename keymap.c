@@ -49,25 +49,25 @@ void dance_cmd_reset (qk_tap_dance_state_t *state, void *user_data) {
 // Alt, Underscore, Alt+Enter
 void dance_alt_finished (qk_tap_dance_state_t *state, void *user_data) {
   if (state->count == 1) {
-    register_code (KC_ALT);
+    register_code (KC_ALGR);
   } else if (state->count == 2) {
-    register_code (KC_ALT);
+    register_code (KC_ALGR);
     register_code (KC_SPC);
   } else {
-    register_code (KC_ALT);
+    register_code (KC_LALT);
     register_code (KC_ENT);
   }
 }
 
 void dance_alt_reset (qk_tap_dance_state_t *state, void *user_data) {
   if (state->count == 1) {
-    unregister_code (KC_ALT);
+    unregister_code (KC_ALGR);
   } else if (state->count == 2) {
     unregister_code (KC_SPC);
-    unregister_code (KC_ALT);
+    unregister_code (KC_ALGR);
   } else {
     unregister_code (KC_ENT);
-    unregister_code (KC_ALT);
+    unregister_code (KC_LALT);
   }
 }
 
@@ -124,7 +124,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		KC_MINS,KC_Q,	  KC_W,	  KC_E,	  KC_R,	  KC_T,	  KC_PGDN,		KC_DOWN,KC_Y,   KC_U,	  KC_I,	  KC_O,	  KC_P,	  KC_RBRC,
 		KC_TAB, KC_A,	  KC_S,	  KC_D,	  KC_F,	  KC_G,	  KC_CAPS,		KC_PSCR,KC_H,   KC_J,	  KC_K,	  KC_L,	  KC_SCLN,KC_QUOT,
 		KC_EQL,	KC_Z,	  KC_X,	  KC_C,	  KC_V,	  KC_B,   KC_ESC,			KC_DEL,	KC_N,	  KC_M,	  KC_COMM,KC_DOT, KC_SLSH,KC_BSLS,
-		M_BASE, W_BASE, TO_GAME,KC_LCTL,M_NAV,  SP_ENT,	ALT_UDS,    GUI_GIS,KC_BSPC,KC_RSFT,CTL_CFT,KC_LEFT,KC_MINS,KC_EQL
+		M_BASE, W_BASE, TO_GAME,KC_LCTL,M_NAV,  SP_ENT,	ALT_UDS,    GUI_GIS,KC_BSPC,KC_RSFT,CTL_CFT,KC_LALT,KC_MINS,KC_EQL
 		),
 
   [WIN_BASE] = LAYOUT_4key_2u_inner(
@@ -146,7 +146,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [MAC_NAV] = LAYOUT_4key_2u_inner(
     RGB_TOG,KC_F1,  KC_F2,  KC_F3,  KC_F4,  KC_F5,  KC_F11,     KC_F12, KC_F6,  KC_F7,  KC_F8,  KC_F9,  KC_F10, KC_PAUS,
     RGB_MOD,A_DEL,  A_LEFT, KC_UP,  A_RGHT, A_BSPC, _______,    _______,_______,C_1,    C_2,    C_3,    C_4,    C_5,
-    RGB_VAI,KC_HOME,KC_LEFT,KC_DOWN,KC_RGHT,KC_END, _______,    _______,_______,C_LEFT, C_UP,   C_RGHT, KC_PAUS,KC__VOLUP,
+    RGB_VAI,KC_HOME,KC_LEFT,KC_DOWN,KC_RGHT,KC_END, _______,    EEP_RST,_______,C_LEFT, C_UP,   C_RGHT, KC_PAUS,KC__VOLUP,
     RGB_VAD,_______,C_LEFT, C_UP,   C_RGHT, _______,_______,    _______,_______,_______,_______,_______,KC_SLCK,KC__VOLDOWN,
     _______,_______,_______,_______,XXXXXXX,SP_ENT, ALT_UDS,    _______,_______,_______,_______,_______,_______,KC__MUTE
     ),
