@@ -49,25 +49,25 @@ void dance_cmd_reset (qk_tap_dance_state_t *state, void *user_data) {
 // Alt, Underscore, Alt+Enter
 void dance_alt_finished (qk_tap_dance_state_t *state, void *user_data) {
   if (state->count == 1) {
-    register_code (KC_RALT);
+    register_code (KC_ALT);
   } else if (state->count == 2) {
-    register_code (KC_RALT);
+    register_code (KC_ALT);
     register_code (KC_SPC);
   } else {
-    register_code (KC_RALT);
+    register_code (KC_ALT);
     register_code (KC_ENT);
   }
 }
 
 void dance_alt_reset (qk_tap_dance_state_t *state, void *user_data) {
   if (state->count == 1) {
-    unregister_code (KC_RALT);
+    unregister_code (KC_ALT);
   } else if (state->count == 2) {
-    unregister_code (KC_RALT);
     unregister_code (KC_SPC);
+    unregister_code (KC_ALT);
   } else {
-    unregister_code (KC_RALT);
     unregister_code (KC_ENT);
+    unregister_code (KC_ALT);
   }
 }
 
@@ -137,15 +137,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [GAMING] = LAYOUT_4key_2u_inner(
     _______,_______,_______,_______,_______,_______,_______,    _______,_______,_______,_______,_______,_______,_______,
-    _______,_______,_______,_______,_______,_______,_______,     _______,_______,_______,_______,_______,_______,_______,
-    _______,_______,_______,_______,_______,_______,_______,     _______, _______,_______,_______,_______,_______,_______,
+    _______,_______,_______,_______,_______,_______,_______,    _______,_______,_______,_______,_______,_______,_______,
+    _______,_______,_______,_______,_______,_______,_______,    _______, _______,_______,_______,_______,_______,_______,
     _______,_______,_______,_______,_______,_______,_______,    _______,_______,_______,_______,_______,_______,_______,
     _______,_______,_______,_______,KC_LALT,KC_SPC, KC_LCTL,    CTL_CFT,_______,_______,GUI_GIS,_______,_______,_______
     ),
 
   [MAC_NAV] = LAYOUT_4key_2u_inner(
     RGB_TOG,KC_F1,  KC_F2,  KC_F3,  KC_F4,  KC_F5,  KC_F11,     KC_F12, KC_F6,  KC_F7,  KC_F8,  KC_F9,  KC_F10, KC_PAUS,
-    RGB_MOD,A_DEL,  A_LEFT, KC_UP,  A_RGHT, A_BSPC, _______,    _______, _______,C_1,    C_2,    C_3,    C_4,    C_5,
+    RGB_MOD,A_DEL,  A_LEFT, KC_UP,  A_RGHT, A_BSPC, _______,    _______,_______,C_1,    C_2,    C_3,    C_4,    C_5,
     RGB_VAI,KC_HOME,KC_LEFT,KC_DOWN,KC_RGHT,KC_END, _______,    _______,_______,C_LEFT, C_UP,   C_RGHT, KC_PAUS,KC__VOLUP,
     RGB_VAD,_______,C_LEFT, C_UP,   C_RGHT, _______,_______,    _______,_______,_______,_______,_______,KC_SLCK,KC__VOLDOWN,
     _______,_______,_______,_______,XXXXXXX,SP_ENT, ALT_UDS,    _______,_______,_______,_______,_______,_______,KC__MUTE
