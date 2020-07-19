@@ -1,161 +1,144 @@
 #include "quantum.h"
 #include QMK_KEYBOARD_H
 
-// Tap dance advanced functions, needed for multiple modifier to work properly
-// Ctrl and ctrl shift
-void dance_ctrl_finished (qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-  	register_code (KC_RCTL);
-  } else {
-    register_code (KC_RCTL);
-    register_code (KC_RSFT);
-  }
-}
-
-void dance_ctrl_reset (qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    unregister_code (KC_RCTL);
-  } else {
-  	unregister_code (KC_RSFT);
-    unregister_code (KC_RCTL);
-  }
-}
-
-// Cmd, cmd shift, cmd + control
-void dance_cmd_finished (qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    register_code (KC_RGUI);
-  } else if (state->count == 2) {
-    register_code (KC_RGUI);
-    register_code (KC_RSFT);
-  } else {
-    register_code (KC_RGUI);
-    register_code (KC_RCTL);
-  }
-}
-
-void dance_cmd_reset (qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    unregister_code (KC_RGUI);
-  } else if (state->count == 2) {
-    unregister_code (KC_RSFT);
-    unregister_code (KC_RGUI);
-  } else {
-    unregister_code (KC_RGUI);
-    unregister_code (KC_RCTL);
-  }
-}
-
-// Alt, Underscore, Alt+Enter
-void dance_alt_finished (qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    register_code (KC_ALGR);
-  } else if (state->count == 2) {
-    register_code (KC_ALGR);
-    register_code (KC_SPC);
-  } else {
-    register_code (KC_LALT);
-    register_code (KC_ENT);
-  }
-}
-
-void dance_alt_reset (qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    unregister_code (KC_ALGR);
-  } else if (state->count == 2) {
-    unregister_code (KC_SPC);
-    unregister_code (KC_ALGR);
-  } else {
-    unregister_code (KC_ENT);
-    unregister_code (KC_LALT);
-  }
-}
-
-//Tap Dance Definitions
-qk_tap_dance_action_t tap_dance_actions[] = {
-  [0] = ACTION_TAP_DANCE_DOUBLE(KC_SPC, KC_ENT),
-  [1] = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_cmd_finished, dance_cmd_reset),
-  [2] = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_ctrl_finished, dance_ctrl_reset),
-  [3] = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_alt_finished, dance_alt_reset),
-};
-
-#define SP_ENT TD(0)
-#define GUI_GIS TD(1)
-#define CTL_CFT TD(2)
-#define ALT_UDS TD(3)
-
-// Simple aliases to keep the map nice and clean
-#define A_DEL RALT(KC_DEL)
-#define A_LEFT RALT(KC_LEFT)
-#define A_RGHT RALT(KC_RGHT)
-#define A_BSPC RALT(KC_BSPC)
-#define C_BSPC LCTL(KC_BSPC)
-#define C_DEL LCTL(KC_DEL)
-#define C_LEFT LCTL(KC_LEFT)
-#define C_RGHT LCTL(KC_RGHT)
-#define C_UP LCTL(KC_UP)
-#define C_1 LCTL(KC_1)
-#define C_2 LCTL(KC_2) 
-#define C_3 LCTL(KC_3)
-#define C_4 LCTL(KC_4)
-#define C_5 LCTL(KC_5)
-
-#define W_LSCR LCTL(LGUI(KC_LEFT))
-#define W_RSCR LCTL(LGUI(KC_RGHT))
-#define W_TASK LGUI(KC_TAB)
-
 // Naming layers for readability
-#define MAC_BASE 0
-#define WIN_BASE 1
+#define BASE 0
+#define NAV 1
 #define GAMING 2
-#define MAC_NAV 3
-#define WIN_NAV 4
+ 
 
-#define M_NAV MO(MAC_NAV)
-#define W_NAV MO(WIN_NAV)
-#define W_BASE TO(WIN_BASE)
-#define M_BASE TO(MAC_BASE)
-#define TO_GAME TO(GAMING)
+// Defining keys for readability
+#define SPC_NAV LT(NAV, KC_SPC)
+
 
 // Actual layout
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-	[MAC_BASE] = LAYOUT_4key_2u_inner(
-		KC_GRV,	KC_1,	  KC_2,	  KC_3,	  KC_4, 	KC_5,	  KC_PGUP,		KC_PGDN,KC_6,   KC_7,	  KC_8,   KC_9,	  KC_0,	  KC_LBRC,
-		KC_MINS,KC_Q,	  KC_W,	  KC_E,	  KC_R,	  KC_T,	  KC_PGDN,		KC_DOWN,KC_Y,   KC_U,	  KC_I,	  KC_O,	  KC_P,	  KC_RBRC,
-		KC_TAB, KC_A,	  KC_S,	  KC_D,	  KC_F,	  KC_G,	  KC_CAPS,		KC_PSCR,KC_H,   KC_J,	  KC_K,	  KC_L,	  KC_SCLN,KC_QUOT,
-		KC_EQL,	KC_Z,	  KC_X,	  KC_C,	  KC_V,	  KC_B,   KC_ESC,			KC_DEL,	KC_N,	  KC_M,	  KC_COMM,KC_DOT, KC_SLSH,KC_BSLS,
-		M_BASE, W_BASE, TO_GAME,KC_LCTL,M_NAV,  SP_ENT,	ALT_UDS,    GUI_GIS,KC_BSPC,KC_RSFT,CTL_CFT,KC_LALT,KC_MINS,KC_EQL
+
+	/* Keymap: BASE layer
+ *	Home, End as well as the bottom 3 on both sides are pretty much unused atm
+ *	
+ * ,----------------------------------------------------.           ,----------------------------------------------------.
+ * |   `    |    1   |   2  |   3  |   4  |   5  | Caps |           | PrSc |   6  |   7  |   8  |   9  |   0    |   [    |
+ * |--------+--------+------+------+------+-------------|           |------+------+------+------+------+--------+--------|
+ * |   -    |    Q   |   W  |   E  |   R  |   T  | Pgup |           | LShft|   Y  |   U  |   I  |   O  |   P    |   ]    |
+ * |--------+--------+------+------+------+------|------|           |------|------+------+------+------+--------+--------|
+ * |  Ctrl  |    A   |   S  |   D  |   F  |   G  | Pgdn |           | LAlt |   H  |   J  |   K  |   L  |   ;    |   '    |
+ * |--------+--------+------+------+------+------|------'           `------|------+------+------+------+--------+--------|
+ * |   =    |    Z   |   X  |   C  |   V  |   B  |                         |   N  |   M  |   ,  |   .  |   /    |   \    |
+ * |--------+--------+------+------+------+------'                         `------+------+------+------+--------+--------|
+ * |  Left  |Alt+Tab |Right |_/shft|                                                     | LGUI | GUI+L| GUI+U  | GUI+R  |
+ * `-------------------------------'                                                     `-------------------------------'
+ *                                       ,--------------.           ,--------------.
+ *                                       | Space| Escape|           |  Del |      |
+ *                               ,-------|   /  |-------|           |------| Bksp |-------.
+ *                               |  Ralt |  Nav |Enter/LAlt|        |Tab/Ctrl|    | Shift  |
+ *                               `----------------------'           `----------------------'
+ */
+
+ 	/*Keymaps are defined by left row, right row, left row, ...*/
+	[BASE] = LAYOUT_4key_2u_inner(
+		KC_GRV,		KC_1,		KC_2,		KC_3,		KC_4,		KC_5,		KC_CAPS,
+													KC_PSCR,	KC_6,		KC_7,		KC_8,		KC_9,		KC_0,		KC_LBRC,
+
+
+		KC_MINUS,	KC_Q,		KC_W,		KC_E,		KC_R,		KC_T,		KC_PGUP,
+													KC_LSFT,	KC_Y,		KC_U,		KC_I,		KC_O,		KC_P,		KC_RBRC,
+
+
+		KC_LCTL,	KC_A,		KC_S,		KC_D,		KC_F,		KC_G,		KC_PGDN,
+													KC_LALT,	KC_H,		KC_J,		KC_K,		KC_L,		KC_SCLN,	KC_QUOT,
+
+
+		KC_EQL,		KC_Z,		KC_X,		KC_C,		KC_V,		KC_B,		KC_ESC,
+													KC_DEL,		KC_N,		KC_M,		KC_COMM,	KC_DOT,		KC_SLSH,	KC_BSLS,
+		
+
+		KC_LEFT,	LALT(KC_TAB),KC_RIGHT,	RALT(KC_SPC),KC_RALT,	SPC_NAV,	LALT_T(KC_ENT),
+													CTL_T(KC_TAB),KC_BSPC,	KC_RSFT,	KC_LGUI,	RGUI(KC_LEFT),RGUI(KC_UP),RGUI(KC_RIGHT)
 		),
 
-  [WIN_BASE] = LAYOUT_4key_2u_inner(
-    _______,_______,_______,_______,_______,_______,_______,    _______,_______,_______,_______,_______,_______,_______,
-    _______,_______,_______,_______,_______,_______,_______,    _______,_______,_______,_______,_______,_______,_______,
-    _______,_______,_______,_______,_______,_______,_______,    _______,_______,_______,_______,_______,_______,_______,
-    _______,_______,_______,_______,_______,_______,_______,    _______,_______,_______,_______,_______,_______,_______,
-    _______,_______,_______,_______,W_NAV,  _______,ALT_UDS,    CTL_CFT,_______,_______,GUI_GIS,_______,_______,_______
-    ),
 
-  [GAMING] = LAYOUT_4key_2u_inner(
-    _______,_______,_______,_______,_______,_______,_______,    _______,_______,_______,_______,_______,_______,_______,
-    _______,_______,_______,_______,_______,_______,_______,    _______,_______,_______,_______,_______,_______,_______,
-    _______,_______,_______,_______,_______,_______,_______,    _______, _______,_______,_______,_______,_______,_______,
-    _______,_______,_______,_______,_______,_______,_______,    _______,_______,_______,_______,_______,_______,_______,
-    _______,_______,_______,_______,KC_LALT,KC_SPC, KC_LCTL,    CTL_CFT,_______,_______,GUI_GIS,_______,_______,_______
-    ),
+	/* Keymap: NAV + numbers layer, thought mainly for the GNOME desktop
+ *	Home, End as well as the bottom 3 on both sides are pretty much unused atm
+ *	
+ * ,----------------------------------------------------.           ,----------------------------------------------------.
+ * |  RGB   |   F1   |  F2  |  F3  |  F4  |  F5  | GAME |           | F12  |  F6  |  F7  |  F8  |  F9  |  F10   |  Next  |
+ * |--------+--------+------+------+------+-------------|           |------+------+------+------+------+--------+--------|
+ * |  xxx   |Ctrl+Del|Ctrl+L|  Up  |Ctrl+R|C+Bksp| PgUp |           |Numlok|   /  |   7  |   8  |   9  | Bspace |  Pause |
+ * |--------+--------+------+------+------+------|------|           |------|------+------+------+------+--------+--------|
+ * |  Ctrl  |  Home  | Left | Down | Right|  End | PgDn |           | xxxx |   *  |   4  |   5  |   6  |   -    | Vol up |
+ * |--------+--------+------+------+------+------|------'           `------|------+------+------+------+--------+--------|
+ * |  xxxx  | GUI+S+L|GUI+L |GUI+U |GUI+R |GUI+S+R|                        |   =  |   1  |   2  |   3  |   +    | Vol dn |
+ * |--------+--------+------+------+------+------'                         `------+------+------+------+--------+--------|
+ * |  xxxx  |Alt+Tab |Right | LAlt |                                                     |   0  |   .  | Enter  |  Mute  |
+ * `-------------------------------'                                                     `-------------------------------'
+ *                                       ,--------------.           ,--------------.
+ *                                       | Space| Escape|           |  Del |      |
+ *                               ,-------|   /  |-------|           |------|Uscore|-------.
+ *                               |L/RAlt |  Nav | Enter |           |Tab/Ctrl|    | Shift  |
+ *                               `----------------------'           `----------------------'
+ */	
+ 	/*Keymaps are defined by left row, right row, left row, ...*/
+	[NAV] = LAYOUT_4key_2u_inner(
+		RGB_TOG,	KC_F1, 	 	KC_F2, 	 	KC_F3,		KC_F4,		KC_F5,		TG(GAMING),
+													KC_F12,		KC_F6,		KC_F7,		KC_F8,		KC_F9,		KC_F10,		KC_MEDIA_FAST_FORWARD,
 
-  [MAC_NAV] = LAYOUT_4key_2u_inner(
-    RGB_TOG,KC_F1,  KC_F2,  KC_F3,  KC_F4,  KC_F5,  KC_F11,     KC_F12, KC_F6,  KC_F7,  KC_F8,  KC_F9,  KC_F10, KC_PAUS,
-    RGB_MOD,A_DEL,  A_LEFT, KC_UP,  A_RGHT, A_BSPC, _______,    _______,_______,C_1,    C_2,    C_3,    C_4,    C_5,
-    RGB_VAI,KC_HOME,KC_LEFT,KC_DOWN,KC_RGHT,KC_END, _______,    EEP_RST,_______,C_LEFT, C_UP,   C_RGHT, KC_PAUS,KC__VOLUP,
-    RGB_VAD,_______,C_LEFT, C_UP,   C_RGHT, _______,_______,    _______,_______,_______,_______,_______,KC_SLCK,KC__VOLDOWN,
-    _______,_______,_______,_______,XXXXXXX,SP_ENT, ALT_UDS,    _______,_______,_______,_______,_______,_______,KC__MUTE
-    ),
 
-  [WIN_NAV] = LAYOUT_4key_2u_inner(
-    RGB_TOG,KC_F1,  KC_F2,  KC_F3,  KC_F4,  KC_F5,  KC_F11,     KC_F12, KC_F6,  KC_F7,  KC_F8,  KC_F9,  KC_F10, KC_PAUS,
-    _______,C_DEL  ,C_LEFT, KC_UP,  C_RGHT, C_BSPC, _______,    _______,_______,_______,_______,_______,_______,_______,
-    _______,KC_HOME,KC_LEFT,KC_DOWN,KC_RGHT,KC_END, _______,    _______,_______,W_LSCR, W_TASK, W_RSCR, KC_PAUS,KC_VOLU,
-    _______,_______,W_LSCR, W_TASK, W_RSCR, _______,_______,    _______,_______,_______,_______,_______,KC_SLCK,KC_VOLD,
-    _______,_______,_______,_______,XXXXXXX,_______,ALT_UDS,    CTL_CFT,_______,_______,GUI_GIS,_______,_______,KC_MUTE
-    )
+		XXXXXXX,	LCTL(KC_DEL),LCTL(KC_LEFT),KC_UP,	LCTL(KC_RIGHT),LCTL(KC_BSPC),_______,
+													KC_NUMLOCK,	KC_KP_SLASH,KC_KP_7,	KC_KP_8,	KC_KP_9,	KC_BSPC,	KC_MEDIA_PLAY_PAUSE,
+
+
+		KC_LCTL,	KC_HOME,	KC_LEFT,	KC_DOWN,	KC_RIGHT,	KC_END,		_______,
+													XXXXXXX,	KC_PAST,	KC_KP_4,	KC_KP_5,	KC_KP_6,	KC_PMNS,	KC__VOLUP,
+
+
+		XXXXXXX,	SGUI(KC_LEFT),RGUI(KC_LEFT),RGUI(KC_UP),RGUI(KC_RIGHT),SGUI(KC_RIGHT),KC_ESC,
+													KC_DELETE,	KC_PEQL,	KC_KP_1,	KC_KP_2,	KC_KP_3,	KC_PPLS,	KC__VOLDOWN,
+		
+
+		XXXXXXX,	LALT(KC_TAB),KC_RIGHT,	_______,	_______,	_______,	_______,
+													CTL_T(KC_TAB),RALT(KC_SPC),KC_RSFT,	KC_KP_0,	KC_PDOT,	KC_PENT,	KC__MUTE
+	),
+
+	/* Keymap: Gaming layer
+ *	
+ * ,----------------------------------------------------.           ,----------------------------------------------------.
+ * |   `    |    1   |   2  |   3  |   4  |   5  | BASE |           | PrSc |   6  |   7  |   8  |   9  |   0    |   [    |
+ * |--------+--------+------+------+------+-------------|           |------+------+------+------+------+--------+--------|
+ * |  Tab   |    Q   |   W  |   E  |   R  |   T  | Pgup |           | Home |   Y  |   U  |   I  |   O  |   P    |   ]    |
+ * |--------+--------+------+------+------+------|------|           |------|------+------+------+------+--------+--------|
+ * |  Caps  |    A   |   S  |   D  |   F  |   G  | Pgdn |           | End  |   H  |   J  |   K  |   L  |   ;    |   '    |
+ * |--------+--------+------+------+------+------|------'           `------|------+------+------+------+--------+--------|
+ * |  LShift|    Z   |   X  |   C  |   V  |   B  |                         |   N  |   M  |   ,  |   .  |   /    |   \    |
+ * |--------+--------+------+------+------+------'                         `------+------+------+------+--------+--------|
+ * |  Left  |Alt+Tab |Right | RAlt |                                                     | LGUI | GUI+L| GUI+U  | GUI+R  |
+ * `-------------------------------'                                                     `-------------------------------'
+ *                                       ,--------------.           ,--------------.
+ *                                       |      | Escape|           |  Del |      |
+ *                               ,-------| Space|-------|           |------| Bksp |-------.
+ *                               |  Bksp |      | Rshift|        	|Tab/Ctrl|    | Enter  |
+ *                               `----------------------'           `----------------------'
+ */
+
+	 	/*Keymaps are defined by left row, right row, left row, ...*/
+	[GAMING] = LAYOUT_4key_2u_inner(
+		KC_GRV,		KC_1,		KC_2,		KC_3,		KC_4,		KC_5,		TG(GAMING),
+													KC_PSCR,	KC_6,		KC_7,		KC_8,		KC_9,		KC_0,		KC_LBRC,
+
+
+		KC_TAB,		KC_Q,		KC_W,		KC_E,		KC_R,		KC_T,		KC_PGUP,
+													KC_HOME,	KC_Y,		KC_U,		KC_I,		KC_O,		KC_P,		KC_RBRC,
+
+
+		KC_CAPS,	KC_A,		KC_S,		KC_D,		KC_F,		KC_G,		KC_PGDN,
+													KC_END,		KC_H,		KC_J,		KC_K,		KC_L,		KC_SCLN,	KC_QUOT,
+
+
+		KC_LSFT,	KC_Z,		KC_X,		KC_C,		KC_V,		KC_B,		KC_ESC,
+													KC_DEL,		KC_N,		KC_M,		KC_COMM,	KC_DOT,		KC_SLSH,	KC_BSLS,
+		
+
+		KC_LEFT,	LALT(KC_TAB),KC_RIGHT,	KC_RALT,	KC_BSPC,	KC_SPC,		KC_RSFT,
+													CTL_T(KC_TAB),KC_BSPC,	KC_ENT,		KC_LGUI,	RGUI(KC_LEFT),RGUI(KC_UP),RGUI(KC_RIGHT)
+		),
 };
