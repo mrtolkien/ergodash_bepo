@@ -36,5 +36,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
  
 // Required because the parent layout defines it itself
-// #undef TAPPING_TERM
-// #define TAPPING_TERM 200
+#undef TAPPING_TERM
+#define TAPPING_TERM 200

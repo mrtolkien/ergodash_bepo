@@ -6,6 +6,12 @@
 #define NAV 1
 #define GAMING 2
  
+// Tap Dance for double modifier
+qk_tap_dance_action_t tap_dance_actions[] = {
+  [0] = ACTION_TAP_DANCE_DOUBLE(KC_LCTL, KC_LSFT)
+};
+
+#define CTL_SFT TD(0)
 
 // Defining keys for readability
 #define SPC_NAV LT(NAV, KC_SPC)
@@ -22,11 +28,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+--------+------+------+------+-------------|           |------+------+------+------+------+--------+--------|
  * |   -    |    Q   |   W  |   E  |   R  |   T  | Pgup |           | LShft|   Y  |   U  |   I  |   O  |   P    |   ]    |
  * |--------+--------+------+------+------+------|------|           |------|------+------+------+------+--------+--------|
- * |  Ctrl  |    A   |   S  |   D  |   F  |   G  | Pgdn |           | LAlt |   H  |   J  |   K  |   L  |   ;    |   '    |
+ * |Ctrl/Sft|    A   |   S  |   D  |   F  |   G  | Pgdn |           | LAlt |   H  |   J  |   K  |   L  |   ;    |   '    |
  * |--------+--------+------+------+------+------|------'           `------|------+------+------+------+--------+--------|
  * |   =    |    Z   |   X  |   C  |   V  |   B  |                         |   N  |   M  |   ,  |   .  |   /    |   \    |
  * |--------+--------+------+------+------+------'                         `------+------+------+------+--------+--------|
- * |  Left  |Alt+Tab |Right |_/shft|                                                     | LGUI | GUI+L| GUI+U  | GUI+R  |
+ * |  Left  |Alt+Tab |Right | Shift|                                                     | LGUI | GUI+L| GUI+U  | GUI+R  |
  * `-------------------------------'                                                     `-------------------------------'
  *                                       ,--------------.           ,--------------.
  *                                       | Space| Escape|           |  Del |      |
@@ -45,15 +51,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 													KC_LSFT,	KC_Y,		KC_U,		KC_I,		KC_O,		KC_P,		KC_RBRC,
 
 
-		KC_LCTL,	KC_A,		KC_S,		KC_D,		KC_F,		KC_G,		KC_PGDN,
+		CTL_SFT,	KC_A,		KC_S,		KC_D,		KC_F,		KC_G,		KC_PGDN,
 													KC_LALT,	KC_H,		KC_J,		KC_K,		KC_L,		KC_SCLN,	KC_QUOT,
 
 
 		KC_EQL,		KC_Z,		KC_X,		KC_C,		KC_V,		KC_B,		KC_ESC,
 													KC_DEL,		KC_N,		KC_M,		KC_COMM,	KC_DOT,		KC_SLSH,	KC_BSLS,
-		
 
-		KC_LEFT,	LALT(KC_TAB),KC_RIGHT,	RALT(KC_SPC),KC_RALT,	SPC_NAV,	LALT_T(KC_ENT),
+
+		KC_LEFT,	LALT(KC_TAB),KC_RIGHT,	KC_LSFT		,KC_RALT,	SPC_NAV,	LALT_T(KC_ENT),
 													CTL_T(KC_TAB),KC_BSPC,	KC_RSFT,	KC_LGUI,	RGUI(KC_LEFT),RGUI(KC_UP),RGUI(KC_RIGHT)
 		),
 
@@ -64,9 +70,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,----------------------------------------------------.           ,----------------------------------------------------.
  * |  RGB   |   F1   |  F2  |  F3  |  F4  |  F5  | GAME |           | F12  |  F6  |  F7  |  F8  |  F9  |  F10   |  Next  |
  * |--------+--------+------+------+------+-------------|           |------+------+------+------+------+--------+--------|
- * |  xxx   |Ctrl+Del|Ctrl+L|  Up  |Ctrl+R|C+Bksp| PgUp |           |Numlok|   /  |   7  |   8  |   9  | Bspace |  Pause |
+ * |  xxxx  |Ctrl+Del|Ctrl+L|  Up  |Ctrl+R|C+Bksp| PgUp |           |Numlok|   /  |   7  |   8  |   9  | Bspace |  Pause |
  * |--------+--------+------+------+------+------|------|           |------|------+------+------+------+--------+--------|
- * |  Ctrl  |  Home  | Left | Down | Right|  End | PgDn |           | xxxx |   *  |   4  |   5  |   6  |   -    | Vol up |
+ * |  xxxx  |  Home  | Left | Down | Right|  End | PgDn |           | xxxx |   *  |   4  |   5  |   6  |   -    | Vol up |
  * |--------+--------+------+------+------+------|------'           `------|------+------+------+------+--------+--------|
  * |  xxxx  | GUI+S+L|GUI+L |GUI+U |GUI+R |GUI+S+R|                        |   =  |   1  |   2  |   3  |   +    | Vol dn |
  * |--------+--------+------+------+------+------'                         `------+------+------+------+--------+--------|
@@ -81,27 +87,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  	/*Keymaps are defined by left row, right row, left row, ...*/
 	[NAV] = LAYOUT_4key_2u_inner(
 		RGB_TOG,	KC_F1, 	 	KC_F2, 	 	KC_F3,		KC_F4,		KC_F5,		TG(GAMING),
-													KC_F12,		KC_F6,		KC_F7,		KC_F8,		KC_F9,		KC_F10,		KC_MEDIA_FAST_FORWARD,
+													KC_F12,		KC_F6,		KC_F7,		KC_F8,		KC_F9,		KC_F10,		KC_MEDIA_NEXT_TRACK,
 
 
 		XXXXXXX,	LCTL(KC_DEL),LCTL(KC_LEFT),KC_UP,	LCTL(KC_RIGHT),LCTL(KC_BSPC),_______,
 													KC_NUMLOCK,	KC_KP_SLASH,KC_KP_7,	KC_KP_8,	KC_KP_9,	KC_BSPC,	KC_MEDIA_PLAY_PAUSE,
 
 
-		KC_LCTL,	KC_HOME,	KC_LEFT,	KC_DOWN,	KC_RIGHT,	KC_END,		_______,
-													XXXXXXX,	KC_PAST,	KC_KP_4,	KC_KP_5,	KC_KP_6,	KC_PMNS,	KC__VOLUP,
+		XXXXXXX,	KC_HOME,	KC_LEFT,	KC_DOWN,	KC_RIGHT,	KC_END,		_______,
+													XXXXXXX,	KC_PAST,	KC_KP_4,	KC_KP_5,	KC_KP_6,	KC_PMNS,	KC_VOLU,
 
 
 		XXXXXXX,	SGUI(KC_LEFT),RGUI(KC_LEFT),RGUI(KC_UP),RGUI(KC_RIGHT),SGUI(KC_RIGHT),KC_ESC,
-													KC_DELETE,	KC_PEQL,	KC_KP_1,	KC_KP_2,	KC_KP_3,	KC_PPLS,	KC__VOLDOWN,
+													KC_DELETE,	KC_PEQL,	KC_KP_1,	KC_KP_2,	KC_KP_3,	KC_PPLS,	KC_VOLD,
 		
 
 		XXXXXXX,	LALT(KC_TAB),KC_RIGHT,	_______,	_______,	_______,	_______,
-													CTL_T(KC_TAB),RALT(KC_SPC),KC_RSFT,	KC_KP_0,	KC_PDOT,	KC_PENT,	KC__MUTE
+													CTL_T(KC_TAB),RALT(KC_SPC),KC_RSFT,	KC_KP_0,	KC_PDOT,	KC_PENT,	KC_MUTE
 	),
 
 	/* Keymap: Gaming layer
- *	
+ * Trying to keep bindings pretty close to a normal keyboard for easier setup and less config change in games	
+ *
  * ,----------------------------------------------------.           ,----------------------------------------------------.
  * |   `    |    1   |   2  |   3  |   4  |   5  | BASE |           | PrSc |   6  |   7  |   8  |   9  |   0    |   [    |
  * |--------+--------+------+------+------+-------------|           |------+------+------+------+------+--------+--------|
@@ -111,12 +118,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+--------+------+------+------+------|------'           `------|------+------+------+------+--------+--------|
  * |  LShift|    Z   |   X  |   C  |   V  |   B  |                         |   N  |   M  |   ,  |   .  |   /    |   \    |
  * |--------+--------+------+------+------+------'                         `------+------+------+------+--------+--------|
- * |  Left  |Alt+Tab |Right | RAlt |                                                     | LGUI | GUI+L| GUI+U  | GUI+R  |
+ * |  XXXXXXXXXXXXXXXXXXXXX | Bksp |                                                     | LGUI | GUI+L| GUI+U  | GUI+R  |
  * `-------------------------------'                                                     `-------------------------------'
  *                                       ,--------------.           ,--------------.
  *                                       |      | Escape|           |  Del |      |
  *                               ,-------| Space|-------|           |------| Bksp |-------.
- *                               |  Bksp |      | Rshift|        	|Tab/Ctrl|    | Enter  |
+ *                               |  Lalt |      | LCtl  |        	|Tab/Ctrl|    | Enter  |
  *                               `----------------------'           `----------------------'
  */
 
@@ -138,7 +145,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 													KC_DEL,		KC_N,		KC_M,		KC_COMM,	KC_DOT,		KC_SLSH,	KC_BSLS,
 		
 
-		KC_LEFT,	LALT(KC_TAB),KC_RIGHT,	KC_RALT,	KC_BSPC,	KC_SPC,		KC_RSFT,
+		XXXXXXX,	XXXXXXX,	XXXXXXX,	KC_BSPC,	KC_LALT,	KC_SPC,		KC_LCTL,
 													CTL_T(KC_TAB),KC_BSPC,	KC_ENT,		KC_LGUI,	RGUI(KC_LEFT),RGUI(KC_UP),RGUI(KC_RIGHT)
 		),
 };
